@@ -1,28 +1,27 @@
-import http.server
-import os
+from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 
 
-PORT = 8080
+PORT_NUMBER = 8080
 
 
-class SimpleHandler(http.server.BaseHTTPRequestHandler):
-  def do_HEAD(s):
-    s.send_response(200)
-    s.send_header('Content-type', 'text/html')
-    s.end_headers()
-
-  def do_GET(s):
-    s.send_response(200)
-    s.send_header('Content-type', 'text/html')
-    s.end_headers()
-
-    m = os.environ.get('TEXT', None) or 'Hello World'
-
-    s.wfile.write(m.encode('utf_8'))
+class MyHandler(BaseHTTPRequestHandler):
+    
+    #Handler for the GET requests
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type','text/html')
+        self.end_headers()
+        self.wfile.write("Hello World !")
+        return
 
 
-httpd = http.server.HTTPServer(('', PORT), SimpleHandler)
+def run():
 
-print('Serving at port:', PORT)
+    server = HTTPServer(('', PORT_NUMBER), MyHandler)
+    print('Serving at port:', PORT)
+   
+    server.serve_forever()
 
-httpd.serve_forever()
+
+if __name__ == '__main__':
+    run()
